@@ -49,18 +49,34 @@ def hybrid_recommendation(user_id, anime_title):
     anime_index = anime_df[anime_df['name'] == anime_title].index[0]
     sim_scores = similarity_matrix[anime_index]
     
+    # This pulls the Top 50 candidates from your lite matrix
     anime_indices = [i[0] for i in sim_scores]
     
     # Step B: Collaborative Filtering (SVD)
     predictions = []
     for i in anime_indices:
-        anime_id = anime_df.iloc[i]['anime_id']
+        # Pulling raw ID from the dataframe
+        raw_anime_id = anime_df.iloc[i]['anime_id']
         anime_name = anime_df.iloc[i]['name']
-        predicted_rating = svd_model.predict(uid=np.int64(user_id), iid=np.int64(anime_id)).est
-        predictions.append((anime_name, predicted_rating))
+        
+        # --- THE AGGRESSIVE FIX ---
+        # We force both to pure Python ints, then to np.int64 
+        # to ensure the SVD dictionary key matches perfectly.
+        u_id = np.int64(int(user_id))
+        i_id = np.int64(int(raw_anime_id))
+        
+        # Predict the rating
+        pred = svd_model.predict(uid=u_id, iid=i_id)
+        score = pred.est
+        
+        # SHOW THE SCORE: This helps us see if there's a 50-way tie
+        display_name = f"{anime_name} (Score: {score:.2f})"
+        predictions.append((display_name, score))
         
     # Step C: Sorting and returning Top 5
-    predictions = sorted(predictions, key=lambda x: x[1], reverse=True)
+    # We sort by the predicted rating (index 1) in descending order
+    predictions.sort(key=lambda x: x[1], reverse=True)
+    
     return [name for name, rating in predictions[:5]]
 
 # --- 4. UI Styling ---
