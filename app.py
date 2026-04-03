@@ -149,6 +149,10 @@ user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000
 st.warning(f"Total users memorized in cloud model: {svd_model.trainset.n_users}")
 st.warning(f"Does the model recognize User {user_id}? : {user_id in svd_model.trainset._raw2inner_id_users}")
 st.warning(f"Data type being passed: {type(user_id)}")
+# --- THE FINAL SKELETON KEY TEST ---
+sample_keys = list(svd_model.trainset._raw2inner_id_users.keys())[:3]
+st.error(f"Sample User IDs in Model: {sample_keys}")
+st.error(f"Sample Key Type: {type(sample_keys[0])}")
 # ------------------------
 selected_anime = st.selectbox("Select an Anime you have watched:", anime_df['name'].values)
 
