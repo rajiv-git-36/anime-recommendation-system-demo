@@ -167,12 +167,22 @@ if st.button("Recommend Anime"):
             with cols[i]:
                 poster, synopsis = fetch_anime_details(anime)
                 
+                # --- THE BULLETPROOF FIX ---
+                # If the API returned None, or something that isn't a string,
+                # we force it to use the placeholder URL.
+                if not poster or not isinstance(poster, str):
+                    poster = "https://via.placeholder.com/225x318?text=No+Image"
+                
+                if not synopsis or not isinstance(synopsis, str):
+                    synopsis = "Synopsis not available."
+                # ----------------------------
+
                 with st.container(border=True):
+                    # Now st.image is mathematically guaranteed to get a string
                     st.image(poster, use_container_width=True)
                     st.markdown(f"**#{i+1} {anime}**")
                     
-                    # This creates a clickable dropdown for the text!
                     with st.expander("Read Synopsis"):
                         st.caption(synopsis)
                 
-                time.sleep(0.4)
+                time.sleep(0.4) # Respecting the API rate limit
