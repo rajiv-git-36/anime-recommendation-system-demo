@@ -55,14 +55,14 @@ def hybrid_recommendation(user_id, anime_title):
 # Step B: Collaborative Filtering (SVD)
     predictions = []
     for i in anime_indices:
-        # 1. Pull the raw ID and force it to a standard Python int
+        # 1.raw ID to a standard Python int
         raw_anime_id = int(anime_df.iloc[i]['anime_id'])
         anime_name = anime_df.iloc[i]['name']
         
-        # 2. Force the user_id to a standard Python int
+        # 2. user_id to a standard Python int
         pure_user_id = int(user_id)
         
-        # 3. Predict (The SVD model will now find the match in its [1, 2, 3] dictionary)
+        # 3. Prediction
         pred = svd_model.predict(uid=pure_user_id, iid=raw_anime_id)
         score = pred.est
         
@@ -137,19 +137,9 @@ add_bg_from_url()
 
 # --- 5. The App Layout ---
 st.title("Anime Recommendation System")
-st.write("Version 2.0 Active!")
 
 st.sidebar.header("User Options")
 user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000, value=1 ,step=1)
-# --- DIAGNOSTIC X-RAY ---
-st.warning(f"Total users memorized in cloud model: {svd_model.trainset.n_users}")
-st.warning(f"Does the model recognize User {user_id}? : {user_id in svd_model.trainset._raw2inner_id_users}")
-st.warning(f"Data type being passed: {type(user_id)}")
-# --- THE FINAL SKELETON KEY TEST ---
-sample_keys = list(svd_model.trainset._raw2inner_id_users.keys())[:3]
-st.error(f"Sample User IDs in Model: {sample_keys}")
-st.error(f"Sample Key Type: {type(sample_keys[0])}")
-# ------------------------
 selected_anime = st.selectbox("Select an Anime you have watched:", anime_df['name'].values)
 
 
@@ -171,7 +161,6 @@ if st.button("Recommend Anime"):
                     synopsis = "Synopsis not available."
 
                 with st.container(border=True):
-                    # --- THE ZERO-NETWORK FALLBACK ---
                     # Only attempt to draw the image if we got a valid link
                     if isinstance(poster, str) and poster.startswith("http"):
                         try:
