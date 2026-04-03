@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import requests
 import time
+import numpy as np
 
 st.set_page_config(page_title="Anime Recommendation System", layout="wide", page_icon="🎬")
 
@@ -55,7 +56,7 @@ def hybrid_recommendation(user_id, anime_title):
     for i in anime_indices:
         anime_id = anime_df.iloc[i]['anime_id']
         anime_name = anime_df.iloc[i]['name']
-        predicted_rating = svd_model.predict(uid=int(user_id), iid=int(anime_id)).est
+        predicted_rating = svd_model.predict(uid=np.int64(user_id), iid=np.int64(anime_id)).est
         predictions.append((anime_name, predicted_rating))
         
     # Step C: Sorting and returning Top 5
