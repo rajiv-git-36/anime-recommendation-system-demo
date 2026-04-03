@@ -167,27 +167,27 @@ if st.button("Recommend Anime"):
             with cols[i]:
                 poster, synopsis = fetch_anime_details(anime)
                 
-                # 1. Enforce string type and basic URL structure
-                if not isinstance(poster, str) or not poster.startswith("http"):
-                    poster = "https://via.placeholder.com/225x318.png?text=No+Image"
-                
                 if not isinstance(synopsis, str):
                     synopsis = "Synopsis not available."
 
                 with st.container(border=True):
-                    # --- 2. THE IRONCLAD TRY-EXCEPT BUBBLE ---
-                    try:
-                        # Try to draw the real image
-                        st.image(poster, use_container_width=True)
-                    except Exception as e:
-                        # If MyAnimeList blocks the Cloud IP, catch the crash and draw a safe box
-                        st.image("https://via.placeholder.com/225x318.png?text=Image+Blocked+by+MAL", use_container_width=True)
-                    # -----------------------------------------
+                    # --- THE ZERO-NETWORK FALLBACK ---
+                    # Only attempt to draw the image if we got a valid link
+                    if isinstance(poster, str) and poster.startswith("http"):
+                        try:
+                            st.image(poster, use_container_width=True)
+                        except Exception:
+                            # IF MAL blocks it, do NOT use another URL. 
+                            # Draw a native Streamlit info box instead.
+                            st.info("🖼️ Image Blocked by API")
+                    else:
+                        # If the API returned nothing
+                        st.info("🖼️ No Image Available")
+                    # ---------------------------------
                     
                     st.markdown(f"**#{i+1} {anime}**")
                     
                     with st.expander("Read Synopsis"):
                         st.caption(synopsis)
                 
-                # 3. Increased sleep to 0.5s to help bypass the API rate-limit bot detection
                 time.sleep(0.5)
