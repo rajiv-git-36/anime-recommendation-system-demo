@@ -55,7 +55,7 @@ def hybrid_recommendation(user_id, anime_title):
     for i in anime_indices:
         anime_id = anime_df.iloc[i]['anime_id']
         anime_name = anime_df.iloc[i]['name']
-        predicted_rating = svd_model.predict(uid=user_id, iid=anime_id).est
+        predicted_rating = svd_model.predict(uid=int(user_id), iid=int(anime_id)).est
         predictions.append((anime_name, predicted_rating))
         
     # Step C: Sorting and returning Top 5
