@@ -126,14 +126,14 @@ add_bg_from_url()
 st.title("Anime Recommendation System")
 
 st.sidebar.header("User Options")
-user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000, value=1)
+user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000, value=1 ,step=1)
 selected_anime = st.selectbox("Select an Anime you have watched:", anime_df['name'].values)
 
 
 if st.button("Recommend Anime"):
     with st.spinner("Calculating hybrid scores and fetching posters from MyAnimeList..."):
         # Getting the 5 titles from engine
-        recommendations = hybrid_recommendation(user_id, selected_anime)
+        recommendations = hybrid_recommendation(int(user_id), selected_anime)
         
         st.markdown(f"### The Top 5 Picks for User {user_id}:")
         
