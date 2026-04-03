@@ -128,6 +128,11 @@ st.write("Version 2.0 Active!")
 
 st.sidebar.header("User Options")
 user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000, value=1 ,step=1)
+# --- DIAGNOSTIC X-RAY ---
+st.warning(f"Total users memorized in cloud model: {svd_model.trainset.n_users}")
+st.warning(f"Does the model recognize User {user_id}? : {user_id in svd_model.trainset._raw2inner_id_users}")
+st.warning(f"Data type being passed: {type(user_id)}")
+# ------------------------
 selected_anime = st.selectbox("Select an Anime you have watched:", anime_df['name'].values)
 
 
