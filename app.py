@@ -124,6 +124,7 @@ add_bg_from_url()
 
 # --- 5. The App Layout ---
 st.title("Anime Recommendation System")
+st.write("Version 2.0 Active!")
 
 st.sidebar.header("User Options")
 user_id = st.sidebar.number_input("Enter User ID:", min_value=1, max_value=10000, value=1 ,step=1)
