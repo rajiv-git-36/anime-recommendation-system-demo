@@ -167,22 +167,27 @@ if st.button("Recommend Anime"):
             with cols[i]:
                 poster, synopsis = fetch_anime_details(anime)
                 
-                # --- THE BULLETPROOF FIX ---
-                # If the API returned None, or something that isn't a string,
-                # we force it to use the placeholder URL.
-                if not poster or not isinstance(poster, str):
-                    poster = "https://via.placeholder.com/225x318?text=No+Image"
+                # 1. Enforce string type and basic URL structure
+                if not isinstance(poster, str) or not poster.startswith("http"):
+                    poster = "https://via.placeholder.com/225x318.png?text=No+Image"
                 
-                if not synopsis or not isinstance(synopsis, str):
+                if not isinstance(synopsis, str):
                     synopsis = "Synopsis not available."
-                # ----------------------------
 
                 with st.container(border=True):
-                    # Now st.image is mathematically guaranteed to get a string
-                    st.image(poster, use_container_width=True)
+                    # --- 2. THE IRONCLAD TRY-EXCEPT BUBBLE ---
+                    try:
+                        # Try to draw the real image
+                        st.image(poster, use_container_width=True)
+                    except Exception as e:
+                        # If MyAnimeList blocks the Cloud IP, catch the crash and draw a safe box
+                        st.image("https://via.placeholder.com/225x318.png?text=Image+Blocked+by+MAL", use_container_width=True)
+                    # -----------------------------------------
+                    
                     st.markdown(f"**#{i+1} {anime}**")
                     
                     with st.expander("Read Synopsis"):
                         st.caption(synopsis)
                 
-                time.sleep(0.4) # Respecting the API rate limit
+                # 3. Increased sleep to 0.5s to help bypass the API rate-limit bot detection
+                time.sleep(0.5)
