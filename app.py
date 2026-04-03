@@ -38,7 +38,7 @@ def fetch_anime_details(anime_title):
 def load_data():
     anime_df = pickle.load(open('data/anime_data.pkl', 'rb'))
     similarity_matrix = pickle.load(open('data/similarity_matrix_lite.pkl', 'rb'))
-    svd_model = pickle.load(open('data/svd_model_lite.pkl', 'rb'))
+    svd_model = pickle.load(open('data/svd_model_final_v3.pkl', 'rb'))
     return anime_df, similarity_matrix, svd_model
 
 anime_df, similarity_matrix, svd_model = load_data()
